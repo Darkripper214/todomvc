@@ -39,19 +39,38 @@ var app = app || {};
 			this.setState({newTodo: event.target.value});
 		},
 
+
 		handleNewTodoKeyDown: function (event) {
 			if (event.keyCode !== ENTER_KEY) {
 				return;
 			}
 
 			event.preventDefault();
+			
+			var arr =JSON.parse(localStorage.getItem('react-todos'));
 
 			var val = this.state.newTodo.trim();
+			var duplicate = 0;
+	
+				arr.forEach(function(obj){
+					if (val == obj.title) {
+					duplicate = 1;
+					} 
+					console.log(obj.title);
+				});
+				
+			if(duplicate == 0){	
+			console.log(duplicate);
+			var val = this.state.newTodo.trim();
+			this.props.model.addTodo(val);
+			this.setState({newTodo: ''});
+			} else {
+				console.log("Do Nothing");
+				
+				}
+			
+		
 
-			if (val) {
-				this.props.model.addTodo(val);
-				this.setState({newTodo: ''});
-			}
 		},
 
 		toggleAll: function (event) {
@@ -71,8 +90,9 @@ var app = app || {};
 			this.setState({editing: todo.id});
 		},
 
-		save: function (todoToSave, text) {
+		save: function (todoToSave, text, date) {
 			this.props.model.save(todoToSave, text);
+			this.props.model.save(date, text);
 			this.setState({editing: null});
 		},
 
@@ -82,6 +102,10 @@ var app = app || {};
 
 		clearCompleted: function () {
 			this.props.model.clearCompleted();
+		},
+		
+		sortingDate: function () {
+			this.props.model.sortingDate();
 		},
 
 		render: function () {
@@ -120,14 +144,17 @@ var app = app || {};
 			}, 0);
 
 			var completedCount = todos.length - activeTodoCount;
-
+			var totalCount = todos.length;
+			
 			if (activeTodoCount || completedCount) {
 				footer =
 					<TodoFooter
 						count={activeTodoCount}
 						completedCount={completedCount}
+						totalCount={totalCount}
 						nowShowing={this.state.nowShowing}
 						onClearCompleted={this.clearCompleted}
+						onSortingDate={this.sortingDate}
 					/>;
 			}
 

@@ -7,11 +7,12 @@ var app = app || {};
 
 (function () {
 	'use strict';
-
+	
 	app.TodoFooter = React.createClass({
 		render: function () {
 			var activeTodoWord = app.Utils.pluralize(this.props.count, 'item');
 			var clearButton = null;
+			var darkButton = null;
 
 			if (this.props.completedCount > 0) {
 				clearButton = (
@@ -23,11 +24,22 @@ var app = app || {};
 				);
 			}
 
+
+				darkButton = (
+					<button
+						className="sort-date"
+						onClick={this.props.onSortingDate}>
+						Sort Date
+					</button>
+				);
+
+
+
 			var nowShowing = this.props.nowShowing;
 			return (
 				<footer className="footer">
 					<span className="todo-count">
-						<strong>{this.props.count}</strong> {activeTodoWord} left
+						<strong>{this.props.count}</strong> / <strong>{this.props.totalCount}</strong> {activeTodoWord} left
 					</span>
 					<ul className="filters">
 						<li>
@@ -53,8 +65,14 @@ var app = app || {};
 									Completed
 							</a>
 						</li>
+						
+						
 					</ul>
-					{clearButton}
+					{darkButton} {' '} {clearButton}
+					
+					
+
+					
 				</footer>
 			);
 		}
